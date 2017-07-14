@@ -25,11 +25,12 @@ class RadProfile(object):
         return 0.5 * (self.bin_lo + self.bin_hi)
 
     def renorm(self, y, yerr=0.0, new_unit=None):
-        assert y != 0.0  # Don't ever divide by zero
-        x, xerr = self.val, self.val_err
+        # Do the division
+        x, xerr  = self.val, self.val_err
+        self.val = x / y
+        # Now deal with errors
         prop_err_term = (xerr/x)**2 + (yerr/y)**2
-        self.val     = x / y
-        self.val_err = new_val * np.sqrt(prop_err_term)  # Works out to xerr/y when yerr=0.0
+        self.val_err = (x/y) * np.sqrt(prop_err_term)  # Works out to xerr/y when yerr=0.0
         if new_unit is not None:
             self.val_unit = new_unit
 
