@@ -106,8 +106,10 @@ def diff(rp1, rp2):
     assert all(rp1.bin_hi == rp2.bin_hi)
     assert rp1.bin_unit == rp2.bin_unit
     assert rp1.val_unit == rp2.val_unit
-    value      = rp1.val - rp2.val
-    value_err  = np.sqrt(rp1.val_err**2 + rp2.val_err**2)
-    result = RadProfile(rp1.bin_lo, rp1.bin_hi, rp1.bin_unit, value, value_err, rp1.val_unit)
+
+    ii        = np.isfinite(rp1.val) & np.isfinite(rp2.val)
+    value     = rp1.val[ii] - rp2.val[ii]
+    value_err = np.sqrt(rp1.val_err[ii]**2 + rp2.val_err[ii]**2)
+    result = RadProfile(rp1.bin_lo[ii], rp1.bin_hi[ii], rp1.bin_unit, value, value_err, rp1.val_unit)
     return result
 
